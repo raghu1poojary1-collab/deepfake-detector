@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepScan - Advanced Deepfake Image & Video Detector</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ================= AUTH CONTAINER ================= -->
+  <main id="auth-container" class="container auth-wrapper">
+    <div class="brand-header">
+      <div class="logo-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h1>DeepScan</h1>
+      <p class="subtitle">AI-Powered Deepfake Detection Platform</p>
+    </div>
+
+    <!-- Login Card -->
+    <div id="login-card" class="card auth-card">
+      <h2 class="card-title">Welcome Back</h2>
+      <p class="card-desc">Sign in to scan media files and view scan records</p>
+      
+      <form id="login-form" class="auth-form">
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="email" id="login-email" placeholder="name@example.com" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+        </div>
+        
+        <button type="submit" id="btn-login" class="btn btn-primary btn-block">
+          <span>Sign In</span>
+          <i class="fa-solid fa-right-to-bracket"></i>
+        </button>
+      </form>
+      
+      <div class="auth-footer">
+        <p>Don't have an account? <a href="#" id="link-to-register">Register</a></p>
+      </div>
+    </div>
+
+    <!-- Register Card -->
+    <div id="register-card" class="card auth-card hidden">
+      <h2 class="card-title">Create Account</h2>
+      <p class="card-desc">Sign up to get instant access to DeepScan detectors</p>
+      
+      <form id="register-form" class="auth-form">
+        <div class="form-group">
+          <label for="register-username">Username</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-user input-icon"></i>
+            <input type="text" id="register-username" placeholder="johndoe" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="register-email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="email" id="register-email" placeholder="name@example.com" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="register-password">Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="register-password" placeholder="Min. 6 characters" minlength="6" required>
+          </div>
+        </div>
+        
+        <button type="submit" id="btn-register" class="btn btn-primary btn-block">
+          <span>Create Account</span>
+          <i class="fa-solid fa-user-plus"></i>
+        </button>
+      </form>
+      
+      <div class="auth-footer">
+        <p>Already have an account? <a href="#" id="link-to-login">Sign In</a></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= DASHBOARD CONTAINER ================= -->
+  <div id="dashboard-container" class="hidden">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="nav-brand">
+        <i class="fa-solid fa-shield-halved logo-brand-icon"></i>
+        <span class="brand-name">DeepScan</span>
+      </div>
+      <div class="nav-user">
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fa-solid fa-user-astronaut"></i>
+          </div>
+          <span id="user-display-name">Loading...</span>
+        </div>
+        <button id="btn-logout" class="btn btn-outline btn-sm">
+          <span>Log Out</span>
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Dashboard Panel -->
+    <main class="container dashboard-main">
+      <div class="dashboard-grid">
+        
+        <!-- Left Side: Upload & Action Panel -->
+        <section class="panel-upload">
+          <div class="card glass-card">
+            <h2 class="panel-title">Media Upload</h2>
+            <p class="panel-desc">Drag and drop images or videos to run our deep learning analysis.</p>
+            
+            <div id="drop-zone" class="drop-zone">
+              <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,video/mp4,video/avi,video/mkv" class="hidden">
+              <div class="drop-zone-prompt">
+                <div class="cloud-icon">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <h3>Drag & Drop file here</h3>
+                <p>or <span class="browse-link">browse from your computer</span></p>
+                <p class="file-limits">Supported formats: JPG, PNG, WEBP, MP4, AVI, MKV (Max 50MB)</p>
+              </div>
+              
+              <!-- Selected File Preview Container -->
+              <div id="preview-container" class="preview-container hidden">
+                <button type="button" id="btn-clear-file" class="btn-clear" title="Remove file">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div id="file-media-preview" class="file-media-preview"></div>
+                <div class="preview-details">
+                  <span id="preview-filename" class="preview-filename">filename.mp4</span>
+                  <span id="preview-filesize" class="preview-filesize">2.4 MB</span>
+                </div>
+                <!-- Interactive Laser Scan Line -->
+                <div id="laser-scanner" class="laser-scanner hidden"></div>
+              </div>
+            </div>
+
+            <!-- Upload Action Button -->
+            <button id="btn-analyse" class="btn btn-gradient btn-block btn-lg" disabled>
+              <span>Analyze Media</span>
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </button>
+
+            <!-- Loading Spinner & Progress Animation -->
+            <div id="scan-progress-container" class="scan-progress-container hidden">
+              <div class="progress-info">
+                <span class="progress-status">Uploading & Analyzing...</span>
+                <span id="progress-percent" class="progress-percent">0%</span>
+              </div>
+              <div class="progress-bar-track">
+                <div id="progress-bar-fill" class="progress-bar-fill"></div>
+              </div>
+              <p class="scan-note"><i class="fa-solid fa-circle-info"></i> Running frame-by-frame convolutional neural analysis...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Side: Diagnostic Result Display -->
+        <section class="panel-result">
+          <!-- Placeholder Result Card -->
+          <div id="result-placeholder" class="card glass-card placeholder-card">
+            <div class="placeholder-icon">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3>Scan Result</h3>
+            <p>Select a file and trigger the analysis. Detailed analysis verdict and confidence report will appear here.</p>
+          </div>
+
+          <!-- Real Scan Result Card -->
+          <div id="result-card" class="card result-card-layout hidden">
+            <h2 class="panel-title">Scan Diagnostics</h2>
+            
+            <div class="verdict-banner" id="verdict-banner">
+              <div class="verdict-icon" id="verdict-icon-container">
+                <!-- Icon will be set dynamically -->
+              </div>
+              <div class="verdict-meta">
+                <span class="verdict-subtitle">Analysis Result</span>
+                <h1 class="verdict-title" id="verdict-title">DEEPFAKE</h1>
+              </div>
+            </div>
+
+            <div class="result-details">
+              <!-- Confidence Score Radial Meter -->
+              <div class="confidence-section">
+                <span class="detail-label">Confidence Score</span>
+                <div class="confidence-meter-container">
+                  <svg class="radial-progress-svg" viewBox="0 0 100 100">
+                    <circle class="radial-bg" cx="50" cy="50" r="40" />
+                    <circle class="radial-bar" id="radial-bar-fill" cx="50" cy="50" r="40" />
+                  </svg>
+                  <div class="confidence-val-container">
+                    <span id="confidence-percentage" class="confidence-percentage">98.4%</span>
+                    <span class="confidence-label">Match</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- General scan specs -->
+              <div class="specs-section">
+                <div class="spec-item">
+                  <div class="spec-icon"><i class="fa-solid fa-file"></i></div>
+                  <div class="spec-info">
+                    <span class="spec-label">File Scanned</span>
+                    <span class="spec-value" id="result-filename">video_clip.mp4</span>
+                  </div>
+                </div>
+
+                <div class="spec-item">
+                  <div class="spec-icon"><i class="fa-solid fa-photo-film"></i></div>
+                  <div class="spec-info">
+                    <span class="spec-label">Media Type</span>
+                    <span class="spec-value" id="result-mediatype">Video Clip</span>
+                  </div>
+                </div>
+
+                <div class="spec-item">
+                  <div class="spec-icon"><i class="fa-regular fa-clock"></i></div>
+                  <div class="spec-info">
+                    <span class="spec-label">Scanned At</span>
+                    <span class="spec-value" id="result-timestamp">2026-05-27 18:00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="verdict-explanation" id="verdict-explanation">
+              <!-- Text explanation based on scan -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Bottom Side: Historical Scan Logging -->
+      <section class="history-section card glass-card">
+        <div class="history-header">
+          <div class="history-title-wrap">
+            <h2 class="panel-title">Analysis History</h2>
+            <p class="panel-desc">Showing your last 20 media scans</p>
+          </div>
+          <button id="btn-refresh-history" class="btn btn-outline btn-sm" title="Refresh scan records">
+            <i class="fa-solid fa-rotate"></i>
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        <!-- History Table/List -->
+        <div class="history-table-wrapper">
+          <table class="history-table" id="history-table">
+            <thead>
+              <tr>
+                <th>Media File</th>
+                <th>Type</th>
+                <th>Verdict</th>
+                <th>Confidence</th>
+                <th>Scanned Date</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="history-list">
+              <!-- History rows loaded dynamically -->
+            </tbody>
+          </table>
+
+          <!-- Empty History State -->
+          <div id="history-empty" class="history-empty hidden">
+            <i class="fa-solid fa-folder-open empty-icon"></i>
+            <h3>No Scan Records Found</h3>
+            <p>Upload and analyze an image or video to create a record.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 DeepScan System. Secured with AES-256 and SHA-256 standards.</p>
+  </footer>
+
+  <!-- Script Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
