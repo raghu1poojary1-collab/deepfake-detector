@@ -4,8 +4,8 @@
   "description": "Backend for Deepfake Detector",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node --no-deprecation server.js",
+    "dev": "nodemon --no-deprecation server.js"
   },
   "dependencies": {
     "axios": "^1.6.8",
